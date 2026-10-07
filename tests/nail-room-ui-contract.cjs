@@ -38,7 +38,7 @@ for(const [raw,lang,expected] of cases){
 }
 const durationMatcher=mobile.match(/const isDuration=x=>(.+);/);
 assert(durationMatcher,'mobile service duration predicate missing');
-const isDuration=vm.runInNewContext('('+durationMatcher[1]+')');
+const isDuration=vm.runInNewContext('(x=>'+durationMatcher[1]+')');
 for(const service of site.services){
  assert(isDuration(service.duration.ru),'mobile hides duration of '+service.id);
  for(const lang of ['ru','en','hy']){

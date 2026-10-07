@@ -18,23 +18,23 @@ function formatter(code,which){
 }
 const mob=formatter(mobile,'mobile'),desk=formatter(desktop,'desktop');
 const cases=[
-  ['15 мин.','ru','15м'],
-  ['30 мин.','ru','30м'],
-  ['60 мин.','ru','1ч'],
-  ['90 мин.','ru','1ч30м'],
-  ['105 мин.','ru','1ч45м'],
-  ['120 мин.','ru','2ч'],
-  ['165 мин.','ru','2ч45м'],
-  ['165 мин.','en','2h45m'],
-  ['165 мин.','hy','2ժ45ր'],
-  ['90 րոպե','hy','1ժ30ր'],
-  ['30 min','en','30m'],
-  ['1,5 ч','ru','1ч30м'],
-  ['2 h','en','2h']
+  ['15 мин.','ru','15м','15м'],
+  ['30 мин.','ru','30м','30м'],
+  ['60 мин.','ru','1ч','1ч'],
+  ['90 мин.','ru','1ч 30м','1ч30м'],
+  ['105 мин.','ru','1ч 45м','1ч45м'],
+  ['120 мин.','ru','2ч','2ч'],
+  ['165 мин.','ru','2ч 45м','2ч45м'],
+  ['165 мин.','en','2h 45m','2h45m'],
+  ['165 мин.','hy','2ժ 45ր','2ժ45ր'],
+  ['90 րոպե','hy','1ժ 30ր','1ժ30ր'],
+  ['30 min','en','30m','30m'],
+  ['1,5 ч','ru','1ч 30м','1ч30м'],
+  ['2 h','en','2h','2h']
 ];
-for(const [raw,lang,expected] of cases){
- assert.equal(mob(raw,lang),expected,'mobile '+raw+' '+lang);
- assert.equal(desk(raw,lang),expected,'desktop '+raw+' '+lang);
+for(const [raw,lang,mobileExpected,desktopExpected] of cases){
+ assert.equal(mob(raw,lang),mobileExpected,'mobile '+raw+' '+lang);
+ assert.equal(desk(raw,lang),desktopExpected,'desktop '+raw+' '+lang);
 }
 const durationMatcher=mobile.match(/const isDuration=x=>(.+);/);
 assert(durationMatcher,'mobile service duration predicate missing');
@@ -57,6 +57,10 @@ assert(desktopCSS.includes('transform:translateX(-6mm)!important'),'desktop dura
 assert(!desktopCSS.includes('transform:translateX(-2mm)!important'),'retired desktop position still present');
 assert(mobileOverride.includes('--mobile-service-time-width:42px'),'standard mobile time rail changed');
 assert(mobileOverride.includes('--mobile-service-time-width:40px'),'narrow mobile time rail changed');
-assert(mobileOverride.includes('padding:3px 3px!important;margin:0!important;white-space:nowrap!important'),'compact time badge padding missing');
+assert(mobileOverride.includes('padding:3px 6px!important;margin:0!important;white-space:nowrap!important'),'original mobile time padding was not restored');
+assert(mobileOverride.includes('width:36px!important;min-width:36px!important;max-width:36px!important'),'uniform short badge width missing');
+assert(mobileOverride.includes('width:44px!important;min-width:44px!important;max-width:44px!important'),'standard long badge width missing');
+assert(mobileOverride.includes('width:42px!important;min-width:42px!important;max-width:42px!important'),'narrow long badge width missing');
+assert(mobile.includes("mobileDurationLabel(duration).includes(' ')?' is-composite':''"),'composite badge class missing');
 assert(site.contacts.booking.some(x=>x.url==='https://widget.sonline.su/ru/services/?placeid=775168886'),'booking URL changed');
 console.log('PASS: 39 Nail Room services have recognized durations across RU/EN/HY, precise formatting, fixed nav and preserved service rail geometry.');

@@ -194,9 +194,16 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
  }
  #salon-mobile #tn13Services .tn31-service-time{
   grid-column:1!important;grid-row:1!important;justify-self:center!important;
-  align-self:center!important;min-width:0!important;min-height:25px!important;
-  padding:3px 3px!important;margin:0!important;white-space:nowrap!important;
+  align-self:center!important;box-sizing:border-box!important;
+  width:36px!important;min-width:36px!important;max-width:36px!important;
+  min-height:25px!important;
+  padding:3px 6px!important;margin:0!important;white-space:nowrap!important;
   font:600 10px/1.1 "Manrope",Arial,sans-serif!important
+ }
+ /* Only hour+minute badges may grow. The service grid, labels and prices stay fixed. */
+ #salon-mobile #tn13Services .tn31-service-time.is-composite{
+  width:44px!important;min-width:44px!important;max-width:44px!important;
+  padding-inline:2px!important;font-size:9.5px!important;letter-spacing:-.02em!important
  }
  #salon-mobile #tn13Services .tn31-service-price{
   grid-column:2!important;grid-row:1!important;justify-self:end!important;
@@ -564,6 +571,9 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
     --mobile-service-side-width:132px;
     --mobile-service-time-width:40px;
     --mobile-service-side-gap:4px;
+  }
+  #salon-mobile #tn13Services .tn31-service-time.is-composite{
+    width:42px!important;min-width:42px!important;max-width:42px!important
   }
   #salon-mobile #tn13Services .tn31-service-row,#salon-mobile #tn13Services .tn31-service-row.tn31-service-demo{
     column-gap:5px!important;

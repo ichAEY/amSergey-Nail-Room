@@ -189,7 +189,7 @@ function formatNailRoomDuration(raw,lang){
   const hours=Math.floor(total/60),mins=total%60;
   const h=lang==='hy'?'ժ':lang==='en'?'h':'ч';
   const m=lang==='hy'?'ր':lang==='en'?'m':'м';
-  return hours?(hours+h+(mins?mins+m:'')):(lang==='ru'?total+'м':total+m);
+  return hours?(hours+h+(mins?' '+mins+m:'')):(lang==='ru'?total+'м':total+m);
 }
 function mobileDurationLabel(raw,lang=mobileServiceLang()){return formatNailRoomDuration(raw,lang)}
 function updateServiceDurationLabels(lang=mobileServiceLang()){slist?.querySelectorAll('.tn31-service-time[data-duration]').forEach(el=>{el.textContent=mobileDurationLabel(el.dataset.duration,lang)})}
@@ -219,7 +219,7 @@ function serviceLine(s){
  const name='<span class="tn31-service-copy"><strong class="tn31-service-name">'+t.main+'</strong>'+
    (detail?'<span class="tn31-service-detail">'+detail+'</span>':'')+'</span>';
  const side='<span class="tn31-service-side">'+
-   (duration?'<small class="tn31-service-time" data-duration="'+duration+'">'+mobileDurationLabel(duration)+'</small>':'')+
+   (duration?'<small class="tn31-service-time'+(mobileDurationLabel(duration).includes(' ')?' is-composite':'')+'" data-duration="'+duration+'">'+mobileDurationLabel(duration)+'</small>':'')+
    servicePriceMarkup(s.price)+'</span>';
  if(!s.details){
   return '<button class="tn31-service-row'+(String(s.price).includes('–')?' is-price-range':'')+'" type="button" data-book-service>'+name+side+'</button>';
@@ -228,7 +228,7 @@ function serviceLine(s){
  return '<div class="tn31-service-row tn31-service-demo">'+
   '<button class="tn31-service-primary" type="button" data-book-service>'+name+'</button>'+
   '<button class="tn31-service-side tn31-service-demo-book" type="button" data-book-service aria-label="Записаться">'+
-   (duration?'<small class="tn31-service-time" data-duration="'+duration+'">'+mobileDurationLabel(duration)+'</small>':'')+
+   (duration?'<small class="tn31-service-time'+(mobileDurationLabel(duration).includes(' ')?' is-composite':'')+'" data-duration="'+duration+'">'+mobileDurationLabel(duration)+'</small>':'')+
    servicePriceMarkup(s.price)+'</button>'+
   '<div class="tn31-service-demo-desc"><p id="'+detailId+'">'+s.details+'</p>'+
   '<button class="tn31-service-demo-more" type="button" data-service-details aria-expanded="false" aria-controls="'+detailId+'">Подробнее…</button></div>'+

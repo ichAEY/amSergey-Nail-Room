@@ -160,11 +160,11 @@ const sectionItems=[['tn13Portfolio','Портфолио'],['tn13Services','Ус
 let activeSection='tn13Portfolio',navRaf=0,navTargetLock=null,navUnlockTimer=0;
 const mobileThemeMeta=document.querySelector('meta[name="theme-color"]');
 function updateThemeChrome(){const visit=document.getElementById('tn13Visit');const dark=!!visit&&visit.getBoundingClientRect().top<=window.innerHeight-24&&window.scrollY>hero.offsetHeight-48;const desired=dark?'#181818':'#fafaf9';if(mobileThemeMeta&&mobileThemeMeta.getAttribute('content')!==desired)mobileThemeMeta.setAttribute('content',desired)}
-function revealActiveNavButton(btn){const navRect=sectionNav.getBoundingClientRect(),btnRect=btn.getBoundingClientRect(),pad=10;let delta=0;if(btnRect.right>navRect.right-pad)delta=btnRect.right-(navRect.right-pad);else if(btnRect.left<navRect.left+pad)delta=btnRect.left-(navRect.left+pad);if(Math.abs(delta)>1)sectionNav.scrollBy({left:delta,behavior:'smooth'})}
+function revealActiveNavButton(btn){const navRect=sectionNav.getBoundingClientRect(),btnRect=btn.getBoundingClientRect(),pad=10;let delta=0;if(btnRect.right>navRect.right-pad)delta=btnRect.right-(navRect.right-pad);else if(btnRect.left<navRect.left+pad)delta=btnRect.left-(navRect.left+pad);if(Math.abs(delta)>1)sectionNav.scrollBy({left:delta,top:0,behavior:'smooth'})}
 function setActiveSection(id){if(!id)return;activeSection=id;const btn=sectionNav.querySelector(`[data-section="${id}"]`);if(!btn)return;sectionNav.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===btn));revealActiveNavButton(btn)}
 function scrollSectionFromNav(id){clearTimeout(navUnlockTimer);if(id==='tn13Portfolio'){navTargetLock=null;setActiveSection('tn13Portfolio');const top=Math.max(0,window.scrollY+hero.getBoundingClientRect().top);window.scrollTo({top,behavior:'smooth'});return}const el=document.getElementById(id);if(!el)return;navTargetLock=id;setActiveSection(id);const top=Math.max(0,window.scrollY+el.getBoundingClientRect().top-sectionNav.offsetHeight+1);window.scrollTo({top,behavior:'smooth'});navUnlockTimer=setTimeout(()=>{navTargetLock=null;updateSectionNav()},900)}
 sectionNav.querySelectorAll('[data-section]').forEach(b=>b.onclick=()=>scrollSectionFromNav(b.dataset.section));
-function updateSectionNav(){navRaf=0;const heroPassed=window.scrollY>=Math.max(0,hero.offsetTop+hero.offsetHeight-2);updateThemeChrome();sectionNav.classList.toggle('visible',heroPassed);sectionNav.setAttribute('aria-hidden',heroPassed?'false':'true');if(!heroPassed){navTargetLock=null;clearTimeout(navUnlockTimer);if(activeSection!=='tn13Portfolio')setActiveSection('tn13Portfolio');return}if(navTargetLock){if(activeSection!==navTargetLock)setActiveSection(navTargetLock);return}const line=sectionNav.getBoundingClientRect().bottom+3;let chosen=sectionIds[0];for(const id of sectionIds){const el=document.getElementById(id);if(!el)continue;const r=el.getBoundingClientRect();if(r.top<=line&&r.bottom>line){chosen=id;break}if(r.top<=line)chosen=id}if(chosen!==activeSection)setActiveSection(chosen)}
+function updateSectionNav(){navRaf=0;const heroEdge=Math.max(0,hero.offsetTop+hero.offsetHeight);const heroPassed=sectionNav.classList.contains('visible')?window.scrollY>=Math.max(0,heroEdge-32):window.scrollY>=heroEdge+8;updateThemeChrome();sectionNav.classList.toggle('visible',heroPassed);sectionNav.setAttribute('aria-hidden',heroPassed?'false':'true');if(!heroPassed){navTargetLock=null;clearTimeout(navUnlockTimer);if(activeSection!=='tn13Portfolio')setActiveSection('tn13Portfolio');return}if(navTargetLock){if(activeSection!==navTargetLock)setActiveSection(navTargetLock);return}const line=sectionNav.getBoundingClientRect().bottom+3;let chosen=sectionIds[0];for(const id of sectionIds){const el=document.getElementById(id);if(!el)continue;const r=el.getBoundingClientRect();if(r.top<=line&&r.bottom>line){chosen=id;break}if(r.top<=line)chosen=id}if(chosen!==activeSection)setActiveSection(chosen)}
 window.addEventListener('scroll',()=>{if(!navRaf)navRaf=requestAnimationFrame(updateSectionNav)},{passive:true});window.addEventListener('resize',updateSectionNav,{passive:true});requestAnimationFrame(updateSectionNav);
 
 // PORTFOLIO
@@ -177,9 +177,21 @@ let serviceCat=SERVICE_CATS[0]||'',servicesExpanded=false;
 serv.innerHTML=`<div class="tn31-services"><p class="tn22-kicker">Услуги</p><h2>Наши услуги</h2><div class="tn31-cats-wrap"><div class="tn31-cats"></div></div><div class="tn31-service-list"></div><button class="tn31-service-more" type="button"><span class="tn31-more-text"></span><span aria-hidden="true">↓</span></button></div>`;
 const scats=serv.querySelector('.tn31-cats'),slist=serv.querySelector('.tn31-service-list'),sMore=serv.querySelector('.tn31-service-more');
 function splitServiceTitle(raw){const parts=String(raw).split(' — ');const main=parts.shift()||raw;let detail=parts.join(' — ');if(!detail&&main.length>48){const m=main.match(/^(.*?)(\s\([^)]{5,}\)|\sBrazilian Blowout)$/i);if(m)return {main:m[1],detail:m[2].trim()}}return {main,detail}}
-function serviceDurationValue(raw){const m=String(raw||'').match(/\d+(?:[.,]\d+)?/);return m?m[0]:''}
 function mobileServiceLang(){const raw=(document.body.dataset.brLang||document.documentElement.lang||(navigator.languages&&navigator.languages[0])||navigator.language||'en').toLowerCase();return raw.startsWith('ru')?'ru':raw.startsWith('hy')?'hy':'en'}
-function mobileDurationLabel(raw,lang=mobileServiceLang()){let v=serviceDurationValue(raw);if(!v)return '';v=lang==='ru'?v.replace('.',','):v.replace(',','.');return v+(lang==='hy'?' ժ.':lang==='en'?' h':' ч')}
+function formatNailRoomDuration(raw,lang){
+  const value=String(raw||'').trim(),number=value.match(/\d+(?:[.,]\d+)?/);
+  if(!number)return '';
+  const amount=Number(number[0].replace(',','.'));
+  if(!Number.isFinite(amount)||amount<=0)return '';
+  const isMinutes=/(?:мин|minutes?|mins?|րոպե|\bmin\b)/i.test(value);
+  const total=Math.round(isMinutes?amount:amount*60);
+  if(total<=0)return '';
+  const hours=Math.floor(total/60),mins=total%60;
+  const h=lang==='hy'?'ժ':lang==='en'?'h':'ч';
+  const m=lang==='hy'?'ր':lang==='en'?'m':'м';
+  return hours?(hours+h+(mins?mins+m:'')):(lang==='ru'?total+'м':total+m);
+}
+function mobileDurationLabel(raw,lang=mobileServiceLang()){return formatNailRoomDuration(raw,lang)}
 function updateServiceDurationLabels(lang=mobileServiceLang()){slist?.querySelectorAll('.tn31-service-time[data-duration]').forEach(el=>{el.textContent=mobileDurationLabel(el.dataset.duration,lang)})}
 function servicePriceMarkup(price){
  const range=String(price||'').trim().match(/^([\d ]+)[–-]([\d ]+)\s*([֏₽€$£])$/u);
@@ -201,7 +213,7 @@ function servicePriceMarkup(price){
 }
 function serviceLine(s){
  const t=splitServiceTitle(s.title);
- const isDuration=x=>/^\s*\d+(?:[.,]\d+)?\s*(?:ч(?:ас(?:а|ов)?)?|мин(?:ут(?:ы)?)?|h|hr|min)\s*$/i.test(String(x||''));
+ const isDuration=x=>/^\s*\d+(?:[.,]\d+)?\s*(?:ч(?:ас(?:а|ов)?)?|мин(?:ут(?:ы)?)?|h|hr|min|mins|minutes|րոպե|ժ)\.?\s*$/i.test(String(x||''));
  const duration=isDuration(s.desc)?s.desc:(isDuration(t.detail)?t.detail:'');
  const detail=[t.detail,s.desc].filter(x=>x&&!isDuration(x)).join(' · ');
  const name='<span class="tn31-service-copy"><strong class="tn31-service-name">'+t.main+'</strong>'+

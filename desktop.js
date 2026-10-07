@@ -675,9 +675,21 @@
     return 'услуг';
   }
 
-  function desktopDurationValue(raw){const m=String(raw||'').match(/\d+(?:[.,]\d+)?/);return m?m[0]:''}
+  function formatNailRoomDuration(raw,lang){
+  const value=String(raw||'').trim(),number=value.match(/\d+(?:[.,]\d+)?/);
+  if(!number)return '';
+  const amount=Number(number[0].replace(',','.'));
+  if(!Number.isFinite(amount)||amount<=0)return '';
+  const isMinutes=/(?:мин|minutes?|mins?|րոպե|\bmin\b)/i.test(value);
+  const total=Math.round(isMinutes?amount:amount*60);
+  if(total<=0)return '';
+  const hours=Math.floor(total/60),mins=total%60;
+  const h=lang==='hy'?'ժ':lang==='en'?'h':'ч';
+  const m=lang==='hy'?'ր':lang==='en'?'m':'м';
+  return hours?(hours+h+(mins?mins+m:'')):(lang==='ru'?total+'м':total+m);
+}
   function activeDesktopServiceLang(){const raw=(document.body.dataset.brLang||document.documentElement.lang||'en').toLowerCase();return raw.startsWith('ru')?'ru':raw.startsWith('hy')?'hy':'en'}
-  function desktopDurationLabel(raw,lang=activeDesktopServiceLang()){let v=desktopDurationValue(raw);if(!v)return '';v=lang==='ru'?v.replace('.',','):v.replace(',','.');const minutes=/(?:мин|minutes?|mins?)/i.test(String(raw||''));return v+(minutes?(lang==='hy'?' րոպե':lang==='en'?' min':' мин'):(lang==='hy'?' ժ.':lang==='en'?' h':' ч'))}
+  function desktopDurationLabel(raw,lang=activeDesktopServiceLang()){return formatNailRoomDuration(raw,lang)}
   function updateDesktopServiceDurations(lang=activeDesktopServiceLang()){document.querySelectorAll('#salonDesktopServices .dct-service-duration[data-duration]').forEach(el=>{el.textContent=desktopDurationLabel(el.dataset.duration,lang)})}
   window.addEventListener('salon-template:languagechange',e=>updateDesktopServiceDurations(e.detail&&e.detail.lang));
 

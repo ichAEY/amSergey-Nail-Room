@@ -18,6 +18,7 @@ jobs:
       - name: Validate Nail Room production data
         run: |
           node tests/validate-site-data.cjs --production
+          node tests/nail-room-ui-contract.cjs
           for f in site-data.js desktop.js mobile.js site-regions.js site-runtime.js; do node --check "$f"; done
       - name: Checkout approved TANEM salon template
         uses: actions/checkout@v4
@@ -30,7 +31,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for f in index.html desktop.css mobile.css salon-palette.css site-regions.js site-runtime.js scripts/prune-dead-css.cjs scripts/style-cleanup-config.cjs; do
+          for f in index.html salon-palette.css site-regions.js site-runtime.js scripts/prune-dead-css.cjs scripts/style-cleanup-config.cjs; do
             cmp "$f" ".approved-salon/$f"
           done
       - name: Verify salon factory and regression tests

@@ -195,7 +195,7 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
  #salon-mobile #tn13Services .tn31-service-time{
   grid-column:1!important;grid-row:1!important;justify-self:center!important;
   align-self:center!important;min-width:0!important;min-height:25px!important;
-  padding:3px 6px!important;margin:0!important;white-space:nowrap!important;
+  padding:3px 3px!important;margin:0!important;white-space:nowrap!important;
   font:600 10px/1.1 "Manrope",Arial,sans-serif!important
  }
  #salon-mobile #tn13Services .tn31-service-price{

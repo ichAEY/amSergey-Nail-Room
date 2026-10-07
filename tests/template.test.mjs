@@ -82,7 +82,9 @@ test("dynamic service count is translated as one complete phrase", () => {
 
 test("portfolio and full gallery remain structural with or without client photos", () => {
   assert.match(html, /id="mobile-portfolio"/);
-  assert.match(html, /Смотреть все работы/);
+  const firstLocale = site.i18n?.locales?.[0]?.code || "ru";
+  const localizedCTA = site.i18n?.translations?.[firstLocale]?.["Смотреть все работы"] || "Смотреть все работы";
+  assert.ok(html.includes(localizedCTA));
   if (site.images.gallery.length === 0) {
     assert.match(html, /mct-work-placeholder/);
   }

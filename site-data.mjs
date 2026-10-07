@@ -1,5 +1,6 @@
 const publicBase = process.env.NEXT_PUBLIC_BASE_PATH || "";
 const site = {
+  "basePath": publicBase,
   "template": {
     "specialty": "nails",
     "bookingProvider": "Sonline",
@@ -743,7 +744,6 @@ const site = {
     "yandexMetrikaId": ""
   }
 };
-site.basePath = publicBase;
 site.images.hero = publicBase + site.images.hero;
 site.images.profile = publicBase + site.images.profile;
 site.images.gallery = site.images.gallery.map(item => ({ ...item, src: publicBase + item.src }));

@@ -49,7 +49,13 @@ const data={
   },
   "schedule": {
     "timezone": "Asia/Yerevan",
-    "periods": [],
+    "periods": [
+      {
+        "days": [1, 2, 3, 4, 5, 6, 7],
+        "open": "10:00",
+        "close": "20:00"
+      }
+    ],
     "fallback": {
       "ru": "График уточняйте при записи",
       "en": "Confirm opening hours when booking",

@@ -1,69 +1,71 @@
-name: Quality and Pages
-
+name: Validate and deploy Nail Room salon
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
   group: pages
   cancel-in-progress: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
     steps:
-      - uses: actions/checkout@v5
-      - name: Checkout approved Hair decoration source
-        uses: actions/checkout@v5
+      - uses: actions/checkout@v4
+      - name: Validate Nail Room production data
+        run: |
+          node tests/validate-site-data.cjs --production
+          for f in site-data.js desktop.js mobile.js site-regions.js site-runtime.js; do node --check "$f"; done
+      - name: Checkout approved TANEM salon template
+        uses: actions/checkout@v4
         with:
-          repository: ichAEY/Shablon-Hair-Master
-          ref: d9ce7e2cd6fa16ad900fce2568b584cbc5a84481
-          path: .tanem-source-hair
-      - name: Prepare approved template assets
+          repository: ichAEY/Shablon-only-for-salons
+          ref: 33e20e61e2d4382a98518e2d7ac275a4a3d22b8a
+          path: .approved-salon
+          fetch-depth: 0
+      - name: Verify approved salon code is unmodified
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p public/assets/template
-          cp .tanem-source-hair/public/assets/yulia/tools/hero.png public/assets/template/hair-tools.png
-          rm -rf .tanem-source-hair
-          test -s public/assets/template/hair-tools.png
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-          cache: npm
-      - run: npm ci
-      - run: npm run lint
-      - run: npm test
-      - name: Render production scenarios
-        run: npm run qa:scenarios
+          for f in index.html desktop.css desktop.js mobile.css mobile-overrides.css mobile.js salon-palette.css site-regions.js site-runtime.js scripts/prune-dead-css.cjs scripts/style-cleanup-config.cjs; do
+            cmp "$f" ".approved-salon/$f"
+          done
+      - name: Verify salon factory and regression tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd .approved-salon
+          node tests/check-factory-contract.cjs
+          node tests/check-template-regression.cjs
+      - name: Package public site
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p _site
+          for f in index.html desktop.css desktop.js mobile.css mobile-overrides.css mobile.js salon-palette.css site-data.js site-regions.js site-runtime.js favicon-source.png logo-placeholder.svg media-placeholder.svg hero.webp profile.webp; do
+            test -s "$f"
+            cp "$f" _site/
+          done
+          shopt -s nullglob
+          for f in gallery-*.webp team-*.webp logo.webp logo.png logo.svg; do cp "$f" _site/; done
+          touch _site/.nojekyll
+          test ! -e _site/source-photos
+          test ! -e _site/business.json
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-        with:
-          token: ${{ github.token }}
-          enablement: true
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: out
-
+          path: _site
   deploy:
-    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - uses: actions/deploy-pages@v4
         id: deployment
-        uses: actions/deploy-pages@v4

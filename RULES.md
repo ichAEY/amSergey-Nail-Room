@@ -1,208 +1,199 @@
-# TANEM Master Template — Rules v2
+# TANEM Salon Template — Rules v1
 
-This repository is the single production template for individual masters. It is not a salon template and it never contains a real client site.
+Этот файл — источник правды для производства сайтов салонов из `Shablon-only-for-salons`.
+Обычный ChatGPT сначала открывает `START_HERE.md`, затем читает этот файл и `docs/FACTORY_GUIDE.md`. `AGENTS.md` служит дополнительной автоматической точкой входа только для Codex и не является обязательным условием работы обычного Chat.
 
-## Production boundary
-- `Shablon-For-Only-Masters` stores only reusable layout, mechanics, validation and specialty rules.
-- Real masters are created only in separate client repositories such as `TAN-xxxx`.
-- Never insert a client's name, contacts, photos, services, reviews or business links into this template.
-- A client repository is generated from the current stable template and then receives verified client data.
+## Обязательный контракт интерфейса — 03.10.2026
 
-## Immutable visual policy
-- Base colors, typography, spacing, cards, responsive behavior and overall visual language come from the approved Hair master design.
-- Approved mechanics are taken only from `Shablon-Hair-Master`. Do not invent replacement mechanics when an approved Hair Master implementation already exists.
-- Client data, photos, branding and unrelated blocks from reference sites must never be copied.
-- Instagram links are never published.
+Эти правила имеют приоритет над более ранними формулировками этого файла и обязательны для всех новых клиентских сайтов.
 
-## Specialty
-- `hair`: mobile shows the approved Hair scissors/comb decoration; desktop does not.
-- `nails`: mobile shows the approved animated nail palette; desktop does not.
-- The Nails palette is positioned inside the hero with a stable reserved gap above the booking-action row, so client text length cannot push it into the CTA.
-- Only specialties with an approved preset may be published. Currently approved: `hair` and `nails`.
-- If the client's specialty does not match an approved preset, STOP the client build before changing client files. Do not use a generic mode, a similar preset, a neutral substitution or an improvised adaptation. Report that the current Master template does not support this specialty and that a separate approved preset is required.
+### Первый экран
 
-## Hero copy
-Hair is deterministic:
-- heading: `<Имя> — ваш эксперт по волосам`;
-- copy: `Стрижки, окрашивание, блонд, уход и укладки с вниманием к состоянию волос, оттенку и вашему образу.`
+- На мобильной версии текущая высота и композиция заголовка считаются фиксированными. Двухстрочное название сохраняет утверждённый вид; однословное название занимает ту же зарезервированную двухстрочную зону, центрируется и может быть крупнее, поэтому кнопки и нижняя часть hero не поднимаются вверх.
+- Название салона и подпись «Салон красоты» на мобильной версии центрируются по оси экрана.
+- Верхний мобильный бренд имеет одинаковый боковой отступ с кнопкой меню. Если есть реальный логотип клиента, он может отображаться здесь; если логотипа нет — используется текстовое название.
+- В левом верхнем углу desktop всегда показывается текстовое название салона одной строкой. Клиентский логотип в desktop-header не подставляется.
+- `salon.city` и `salon.address` — короткие строки для интерфейса: например `г. Балашиха` и `Павлино, 69`. Полный проверенный почтовый/административный адрес хранится отдельно в `salon.fullAddress` и не выводится в hero.
 
-Nails is deterministic in the heading:
-- heading: `<Имя> — ваш эксперт по маникюру и педикюру`;
-- supporting copy may come from verified client data until a separate fixed Nails copy is approved.
+### Стартовая заставка
 
-Unsupported specialties are not built or published until a separate approved preset is added to this template.
+- Стартовая заставка всегда сохраняет существующую механику появления/исчезновения и располагает логотип или название строго по геометрическому центру экрана на mobile и desktop.
+- Если у клиента есть реальный `media.logo`, на заставке показывается именно он; размер только на заставке увеличен примерно на 40% относительно прежнего splash-размера. Логотипы внутри самого сайта это правило не меняет.
+- Если реального логотипа нет, на заставке показывается название салона тем же `Cormorant Garamond` и в той же типографической стилистике, что и название в hero; текстовый splash увеличен примерно на 30% относительно предыдущего варианта.
+- Эти изменения относятся только к стартовой заставке и не должны менять hero, header, карточки, секции или остальную композицию сайта.
 
-## Intro
-- Logo has priority when a real logo is supplied.
-- Without a logo, intro/header use the text brand/master name fallback.
-- Intro text is always centered.
-- Long names automatically reduce in size and may wrap to two balanced lines instead of leaving the viewport.
-- Never invent a logo.
+### Карты и контакты
 
-## Portfolio
-- Portfolio is a permanent structural section on both mobile and desktop.
-- Missing client photos must not remove the Portfolio section or the hero link to it.
-- The approved CTA wording is `Смотреть все работы`.
-- The gallery control is always active. With zero client photos it opens the approved Hair Master gallery shell with no photographs inside.
-- When the operator later uploads real client photos, the mobile and desktop gallery behavior remains the approved `Shablon-Hair-Master` behavior.
-- Never invent, generate or download substitute client photos.
+- Для production обязательны `contacts.mapUrl` и `contacts.mapEmbedUrl`.
+- Россия (`RU`) → ссылка и встроенная карта Яндекс Карт; любая другая страна → Google Maps.
+- Карточка адреса: основная строка — короткий адрес без повторений; подпись — «Открыть в Яндекс Картах» для RU или «Открыть в Google Maps» для остальных стран.
+- Карточка телефона создаётся только при реальном номере: основная строка — номер; подпись — «Позвонить». Если телефона нет, карточка, телефон в header и отдельная кнопка звонка полностью отсутствуют; оставшееся действие маршрута занимает доступную ширину.
+- Карточка мессенджера создаётся только при реальном `messengerUrl`. Основная строка — название мессенджера, подпись — «Написать в <название салона>». Если мессенджера нет, карточка полностью отсутствует, а сетка адаптируется без заглушки.
 
-## Services
-Every service uses one of the three approved Hair structures:
-1. variants/subdivisions;
-2. simple service with no description;
-3. simple service with a description.
+### Команда
 
-Categories:
-- 1 visible category: no category switcher.
-- exactly 2: two-button mode using the approved Hair Master tab mechanics; no synthetic `Все` tab.
-- 3 or more: one Hair-style horizontal ribbon including `Все`; it never wraps to a second row. Overflow continues horizontally and is scrollable.
-- Categories are dynamic and are never limited to four or five groups.
+- Блок мастеров всегда содержит четыре визуальные карточки на mobile и desktop.
+- Если реальных данных команды нет, показываются четыре нейтральные карточки «Мастер» с системным нейтральным аватаром. Эти карточки остаются кликабельными: по нажатию всегда открывается стандартная карточка специалиста с нейтральными состояниями «информация не указана / пока нет данных об услугах / пока нет фото / пока нет отзывов». Нельзя придумывать имена, роли, опыт, описания, фотографии или услуги.
+- Реальные мастера заменяют нейтральные карточки по подтверждённым данным. Наличие фотографии мастера не обязательно: если имя/роль подтверждены, мастер остаётся реальным элементом `team[]`, а при отсутствии фото интерфейс использует системный нейтральный аватар.
 
-Many services:
-- up to 7 services are shown immediately;
-- from the 8th service onward, show the first 7 and the automatic `Открыть ещё N услуг` control;
-- mobile and desktop use the same visible count and the same hidden count;
-- the count is derived from the actual hidden items, never written by hand.
+### Галерея и услуги
 
-## About the master
-The standard copy is written in first person and is deterministic. Only the master's first name is inserted into this standard lead.
+- Мобильная галерея открывается единым app-like переходом с масштабированием/прозрачностью от точки действия. Все входы в галерею используют одну механику.
+- Мобильные категории галереи всегда сохраняют естественную ширину и горизонтальную прокрутку; шрифт — 14.36 px. Навигация выполняется обычным горизонтальным свайпом/прокруткой; стрелки, кружки и другие отдельные индикаторы направления не добавляются.
+- Мобильные категории услуг: шрифт 13.98 px. Ровно две категории равномерно занимают доступную ширину. При любом другом количестве сохраняется естественная ширина, одна строка и горизонтальная прокрутка при необходимости.
+- Mobile «Показать ещё / Свернуть» использует плавное изменение высоты и сохраняет визуальную позицию кнопки при сворачивании по той же логике, что desktop.
+- На desktop категории услуг немного крупнее; название услуги уменьшено на 5%. Цена показывается без белой рамки/плашки, правее с безопасным внутренним отступом; длительности сохраняют единую визуальную колонку.
 
-Hair:
-- unknown experience lead: `Я <Имя> — эксперт по волосам.`
-- known experience lead: `Я <Имя> — эксперт по волосам со стажем более <N> лет.`
-- paragraph 1: `Специализируюсь на стрижках и окрашивании, blond и сложных техниках, уходе и реконструкции волос.`
-- paragraph 2: `Работаю с формой, цветом и состоянием волос, чтобы результат выглядел цельно и подходил именно вам.`
-- skills: `Стрижки и окрашивание`; `Blond и сложные техники`; `Уход и реконструкция волос`.
+## Источник клиентских данных
 
-Nails:
-- unknown experience lead: `Я <Имя> — эксперт по маникюру и педикюру.`
-- known experience lead: `Я <Имя> — эксперт по маникюру и педикюру со стажем более <N> лет.`
-- paragraph 1: `Выполняю маникюр и педикюр, наращивание и коррекцию ногтей.`
-- paragraph 2: `Работаю со стерильными инструментами и уделяю внимание аккуратности, форме и качеству результата.`
-- skills: `Маникюр и педикюр`; `Наращивание и коррекция`; `Стерильные инструменты`.
+- Агент сначала открывает все доступные переданные ссылки и сам извлекает сведения из Яндекс Карт, Google Maps, 2ГИС, сайта, сервисов записи, социальных сетей, CRM-карточки и приложенных файлов по `docs/INPUT_CHECKLIST.md`.
+- Пользователь не обязан каждый раз перекладывать сведения в новую анкету.
+- Явный список услуг, цен и длительности, переданный пользователем, является окончательным источником правды для каталога. Данные из внешнего источника можно собрать, если они видны, но нельзя дополнять каталог догадками.
+- После исследования агент один раз сообщает, что найдено, и одним списком запрашивает все недостающие обязательные данные и разрешение конфликтов.
+- Отсутствующие факты не придумываются. `heroDescription` и `about` уже заданы в `site-data.blank.js` утверждёнными универсальными текстами и не персонализируются без прямого поручения владельца шаблона.
+- Отсутствующие данные не выдумываются. Блоки команды и отзывов являются постоянными: если реальных данных нет, они остаются видимыми в нейтральном пустом состоянии.
 
-The round monogram in About is mobile-only and always uses the first letter of the master's first name. Schedule, address and unrelated facts never enter the three skills.
+## Подтверждённая таблица решений
 
-## Experience
-- Known experience: show the approved experience stat/badge and include it in the standard first-person About lead.
-- Unknown experience: never invent it; omit the experience phrase, collapse hero stats to rating + service count and hide the empty experience badge.
+- Россия (`RU`) → только `ru` и `en`.
+- Армения (`AM`) → `ru`, `en`, `hy`.
+- Поддержка `UZ` и `TJ` уже существует в коде, но используется только по прямому указанию пользователя; новые страны нельзя добавлять самовольно.
+- Мобильные категории услуг: каждое название **целиком в одной строке**, с нормальным размером шрифта и внутренними отступами. Нельзя переносить, уменьшать шрифт или обрезать подписи ради заполнения ширины.
+- Мобильные категории услуг всегда остаются в одну строку. **Исключение: ровно 2 категории** — они равномерно делят доступную ширину при сохранении внутренних отступов и зазора. При любом другом количестве используется естественная ширина карточек и горизонтальная прокрутка без сжатия/переноса. Эталон шрифта после правки 03.10.2026 — Manrope 13,98 px/500, высота 35 px, боковые отступы 15 px, зазор 8 px. Первую категорию оставить на утверждённой оси первой карточки услуги.
+- Мобильная галерея по образцу Эсмеральды: фон за лентой категорий совпадает с основным фоном галереи, без отдельной плашки и тени; **сама лента имеет единую рамку-капсулу с радиусом 14 px**. Категории — Manrope 14,36 px, каждая в одну строку и естественной ширины; при нехватке ширины лента прокручивается. При переполнении показываются индикаторы направления, которые исчезают на достигнутом краю.
+- Мобильная карточка мастера: сохраняются размеры и расстояния между вкладками, но последняя вкладка «Отзывы» должна полностью показываться при горизонтальной прокрутке к правому краю, без преждевременной маски или обрезания.
+- На мобильной версии первой открывается первая реальная категория. На ПК доступно представление «Все» и реальные категории.
+- Есть реальные отзывы 5★ → показываются реальные отзывы. Нет отзывов → раздел отзывов всё равно остаётся и показывает нейтральное состояние без выдуманных отзывов.
+- Есть команда с фотографиями и конкретными данными → показываются реальные мастера. Нет команды → раздел всё равно показывает четыре нейтральные кликабельные карточки «Мастер» без выдуманных персональных данных; карточка специалиста по нажатию открывается всегда.
+- `hero.webp` используется как главное изображение салона и на мобильной, и на ПК-версии. Отдельного desktop-hero больше нет.
+- Есть DIKIDI, YCLIENTS или другая прямая ссылка записи → основные CTA ведут к реальному способу записи через штатную механику. Нет прямой записи → используются только реально переданные телефон/мессенджеры.
+- Для салона не создаётся и не показывается «стаж».
 
-## Languages
-Russia:
-- RU + EN.
+## Граница шаблона
 
-Outside Russia:
-- local country language + RU + EN.
-- The mechanism is not country-hardcoded: use the verified local language code for Kazakhstan, Uzbekistan, Kyrgyzstan, Armenia, Azerbaijan, Georgia, Belarus, Moldova and other supported markets (for example `kk`, `uz`, `ky`, `hy`, `az`, `ka`, `be`, `ro`).
-- Locale codes are normalized as lowercase language codes; the language switch label remains the short uppercase label supplied in `i18n.locales`.
+- Репозиторий хранит только общий каркас, механику, валидацию и правила производства.
+- Данные конкретного салона заполняются в отдельном клиентском репозитории.
+- Утверждённый дизайн не подгоняется вручную под отдельного клиента.
+- Клиентские фотографии не придумываются, не генерируются и не заменяются случайными изображениями.
+- Клиентские фотографии не заменяются случайными изображениями. Для отсутствующих необязательных данных используется утверждённое нейтральное состояние; команда и отзывы не скрываются.
 
-Initial locale:
-- saved visitor choice wins;
-- otherwise use the first supported browser/system language;
-- unsupported system language falls back to EN.
+## Канонические имена медиа
 
-The selected locale is saved locally.
+Для новых салонных сайтов используется единый стандарт TANEM. Имена файлов пишутся строчными буквами.
 
-Content normalization:
-- Russian is the canonical internal content language.
-- Other enabled languages receive faithful, human-checked translations. Do not publish guessed or partial machine translation.
-- Translate interface/navigation, headings, CTAs, standard template copy, master profession and descriptive copy, service categories/names/descriptions/variant labels, city/metro labels and schedule text.
-- Translate complete dynamic phrases rather than stitching translated fragments together when word order can differ between languages.
-- Brand/business names are identity data and are never translated.
-- A master's personal name is never semantically translated. Keep the source spelling by default. A verified local spelling/transliteration may be supplied explicitly in `i18n.masterNames[locale]`; if it is absent, the original name is rendered.
-- Review author, review text and review source are immutable source data and are always rendered verbatim in the original language.
-- Phone numbers, URLs, booking/review provider names, prices/currency strings and exact street/address strings remain source data and are not translated. City/metro and explanatory location UI may be translated.
-- A populated site fails validation if a required enabled-language translation is missing.
+- `hero.webp` — главная фотография салона на мобильной и ПК-версиях. **Обязательно в итоговом сайте.** Если отдельный hero-файл не передан, ChatGPT обязан самостоятельно просмотреть реальные фотографии галереи/исходные материалы, выбрать наиболее подходящий кадр для первого экрана и назначить/скопировать его как `hero.webp`. Просить пользователя вручную выбирать hero только из-за отсутствия отдельного файла нельзя.
+- `profile.webp` — отдельная фотография для блока «О салоне»: интерьер, рабочая зона или атмосфера салона. **Обязательно в итоговом сайте.** Если отдельный profile-файл не передан, ChatGPT обязан самостоятельно выбрать подходящую реальную фотографию из галереи/исходных материалов и назначить/скопировать её как `profile.webp`; предпочтение отдаётся интерьеру, рабочей зоне или атмосфере салона.
+- `gallery-01.webp`, `gallery-02.webp` ... `gallery-25.webp` — реальные фотографии работ/интерьера. От 1 до 25 фотографий. **Обязательно.**
+- `logo.webp`, `logo.png`, `logo.svg` или другой подходящий прозрачный файл — логотип клиента. **Необязательно, но важно.**
+- `team-01.webp`, `team-02.webp` ... — фотографии конкретных мастеров салона. **Необязательно; только при наличии фотографии и конкретных данных о человеке.**
+- `favicon-source.png` — системная иконка TANEM. Это файл шаблона, а не клиентское медиа.
 
-Layout:
-- mobile language switch keeps the approved Esmeralda behavior immediately left of the menu;
-- desktop language switch is visibly larger and sits immediately before the phone;
-- the phone remains the rightmost desktop contact element.
+Новые сайты не используют как стандарт `master.00000.webp`, `masterpc.00000.webp`, `gallery.00000.webp` и другие прежние схемы именования. Наследованные клиентские репозитории могут сохранять старые имена до отдельной миграции, но новые сайты формируются только по правилам выше.
 
-## Additional
-- Every master site shows exactly three compact standard cards in `Дополнительно`:
-  - `Выбор услуги` — `Мастер поможет определиться.`
-  - `Пожелания` — `Покажите пример результата.`
-  - `Перенос записи` — `Предупредите заранее.`
-- These three cards are template-owned defaults and are not replaced with schedules, addresses or invented client policies.
-- On mobile, all three card titles use identical typography; no card may receive a smaller title size.
+## Где используется каждый файл
 
-## Reviews
-- Publish at most 9 verified five-star reviews from the supplied source, such as Yandex Maps or DIKIDI.
-- Review structure on mobile and desktop follows `Shablon-Hair-Master`.
-- Keep both approved review renderers: `mct-review-card-mobile` for widths below 1024px and `dct-review-card` for desktop. Both render the same verified review data; never remove one renderer while leaving the CSS split in place.
-- Approved phone review layout: name with five stars on the left, review source on the right, up to 7 visible text lines, and `Подробнее →` fixed in the lower-right reserved area so review text can never overlap it. This rule is mobile-only; do not change the approved desktop review layout when applying it.
-- Keep the real author, exact source and verbatim text of every review. Never summarize, rewrite, shorten, correct or fabricate review wording.
-- Store `source` on an individual review when sources differ. A site-wide `reviewSource` may be used only when all published reviews come from the same source.
-- Review cards always show five stars because only verified five-star reviews are allowed; do not add or infer a separate rating.
-- If fewer than 9 verified reviews are available, publish only the verified reviews that exist.
-- When there are no verified reviews, render no review section at all. Never use placeholder, sample or invented reviews.
+### `hero.webp`
 
-## Booking and contact
-- The booking block always uses: `Запишитесь онлайн или свяжитесь любым удобным способом.`
-- Mobile booking/contact structure is frozen to the approved `TAN-0074` mobile `Запись и связь` block.
-- Desktop booking/contact remains unchanged unless separately approved.
-- The primary mobile booking CTA spans the full available action width.
-- The live `Открыто / Закрыто` badge is shown at the right of `Запись и связь` and recalculates from the client's configured timezone and schedule data.
-- When working hours differ by weekday, `location.weeklyHours` is the source of truth: define all seven keys `mon`…`sun`; a working day is `{ open: "HH:MM", close: "HH:MM" }`, and a day off is `null`. Never flatten a weekly schedule into one generic open/close pair. Legacy `openTime/closeTime` remains supported only when no weekly schedule is configured.
-- A verified address and work schedule are displayed below the mobile contact actions as plain-text styling, never as a white card or separate route button.
-- The displayed mobile address itself is clickable and opens the same verified route/map URL. If the source is Yandex Maps, keep the Yandex link; if the source is Google Maps, keep the Google link. Never substitute the provider or invent a route URL.
-- The mobile location action uses that same verified route/map URL.
-- When the location action is the unpaired final action on mobile, it spans the full contact-grid width.
-- If a direct booking URL exists, generic booking CTAs open it.
-- If a service-specific URL exists, that service opens its own URL.
-- Otherwise the service inherits the direct booking URL when one exists.
-- Without a direct booking URL, booking CTAs use the approved contact sheet.
-- Phone alone is a valid contact configuration; messenger is optional.
-- `contacts.channels` may contain multiple verified contact channels (for example WhatsApp, Telegram and VK). They render after the phone in the supplied order.
-- Legacy `contacts.messenger` remains supported for existing TAN-xxxx sites and is deduplicated against `contacts.channels`.
-- The booking/contact grid renders every verified channel dynamically; its existing paired/full-row layout logic must not be hard-coded to a fixed number of contacts.
-- Never invent a booking URL, phone or messenger.
-- Never expose Instagram as a booking/contact option.
+Один файл используется как главное изображение первого экрана:
+- на мобильной версии;
+- на ПК-версии.
 
-## Canonical media contract
-The same naming standard is used for every individual master.
+В `site-data.js`:
 
-- `hero.webp` — the main master photo. It is the hero image on mobile and desktop. Site-level hero is mandatory.
-- `profile.webp` — a second master photo for the “О мастере” block. A client-supplied profile photo is optional.
-- `gallery-01.webp`, `gallery-02.webp` ... `gallery-15.webp` — real works of the master. Production sites use at least one and at most 15 gallery images.
-- `logo.webp`, `logo.png`, `logo.svg` or another suitable transparent logo file — optional. Never invent a logo.
-- File names are lowercase. New sites do not introduce `master.00000.webp`, `masterpc.00000.webp`, `portrait` or other competing client naming schemes.
+```js
+media: {
+  hero: [
+    {src: 'hero.webp', alt: {ru: 'Фото салона', en: 'Salon photo'}}
+  ]
+}
+```
 
-The operator uploads only real client media. In `site-data.mjs`, use `images.hero` for `hero.webp`, `images.profile` for `profile.webp`, and `images.gallery` for the numbered gallery files.
+Отдельный `hero-pc` / `masterpc` не создаётся.
 
-## Master photo fallback
-Fallback files are template-owned system assets. The technical specialist never creates, downloads or copies them into a client package.
+### `profile.webp`
 
-Approved paths:
-- Hair: `public/fallback/masters/hair/hero.webp` and `public/fallback/masters/hair/profile.webp`.
-- Nails: `public/fallback/masters/nails/hero.webp` and `public/fallback/masters/nails/profile.webp`.
+Используется только как фотография блока «О салоне» на мобильной и ПК-версиях.
 
-Decision rules:
-- Real `hero.webp` exists → use it.
-- Real `hero.webp` is missing → use the fallback hero for the selected specialty.
-- Real `profile.webp` exists → use it in “О мастере”.
-- Real `profile.webp` is missing → use the fallback profile for the selected specialty.
-- Real client media always has priority over fallback media.
-- Hair fallback is never used for Nails and Nails fallback is never used for Hair.
-- Unsupported specialties never reach media fallback selection: the build must already have been stopped by the Specialty rule.
+```js
+media: {
+  about: 'profile.webp'
+}
+```
 
-## System favicon
-- `favicon-source.png` is the canonical TANEM system identity icon, not a client logo.
-- The served copy is `public/favicon-source.png`; it is used by browser/system favicon metadata.
-- A technical specialist does not prepare or replace the favicon for each client.
-- Client `logo.*` is rendered only inside the site and never replaces the TANEM system favicon unless a separate rule is explicitly approved.
+`hero.webp` и `profile.webp` имеют разные роли. При автоматическом выборе из галереи ChatGPT по возможности выбирает разные подходящие кадры; случайные, сгенерированные или не относящиеся к клиенту изображения запрещены.
 
-## Mass-production quality gate
-Before a template version becomes stable, rendered QA must cover at least:
-- Hair with 3+ categories;
-- Nails with exactly 2 categories and the mobile palette;
-- empty gallery while Portfolio remains present;
-- long master name;
-- many services with automatic hidden count;
-- RU/EN desktop header;
-- direct booking;
-- phone-only contact.
+### `gallery-01.webp` и далее
 
-Only a green tested template version may be used to generate new `TAN-xxxx` repositories.
+Единый набор реальных фотографий салона. ChatGPT/технический специалист после просмотра материалов распределяет их по реальным категориям галереи в `site-data.js`.
+
+Те же физические файлы можно использовать:
+- в видимом блоке «Наши работы»;
+- в полной галерее.
+
+Физические дубликаты не создаются. Нумерация начинается с `01` и идёт последовательно до `25`.
+
+Пример:
+
+```js
+const g1={src:'gallery-01.webp',alt:{ru:'Работа салона',en:'Salon work'}};
+const g2={src:'gallery-02.webp',alt:{ru:'Интерьер салона',en:'Salon interior'}};
+
+media: {
+  portfolio:[g1,g2],
+  gallery:{
+    'Работы':[g1],
+    'Салон':[g2]
+  }
+}
+```
+
+### `logo.*`
+
+Логотип клиента используется:
+- в начальной анимации;
+- как бренд/логотип в верхней части мобильной версии.
+
+На ПК слева сверху всегда используется текстовое название салона одной строкой; клиентский логотип туда не подставляется.
+
+Логотип должен быть без фона. Если исходник с фоном, его нужно сначала подготовить, например попросить ChatGPT удалить фон. Формат WebP не обязателен; прозрачный PNG/SVG допустим.
+
+Если логотипа нет, шаблон использует штатное текстовое название салона. Логотип не заменяет системный favicon TANEM.
+
+### `team-01.webp` и далее
+
+Используется только для реальных мастеров салона. Фото добавляется только если одновременно известны:
+- кто изображён;
+- имя/роль;
+- конкретные данные или описание для карточки мастера.
+
+`team-01.webp` относится к первому реальному мастеру с подтверждённой фотографией, `team-02.webp` — ко второму и так далее. Путь записывается в поле `team[].photo`. Если мастер подтверждён, но отдельной фотографии нет, `team[].photo` остаётся пустым и используется системный нейтральный аватар; карточка и страница мастера всё равно существуют.
+
+Если реальной команды нет, `team[]` остаётся пустым, но сам раздел «Наша команда» не скрывается: интерфейс показывает четыре системные нейтральные карточки «Мастер». Они не записываются в `team[]` и не считаются клиентскими данными, но каждая карточка кликабельна и открывает стандартную страницу специалиста с нейтральными пустыми состояниями. Нельзя создавать выдуманного реального мастера ради заполнения блока.
+
+### Отзывы
+
+Добавляются только реальные отзывы 5★ с подтверждёнными автором, текстом и источником. Если отзывов нет, `reviews[]` остаётся пустым, но раздел отзывов не скрывается и показывает нейтральное пустое состояние. Выдуманные отзывы запрещены.
+
+## Системный favicon TANEM
+
+- `favicon-source.png` находится внутри шаблона и является системной иконкой TANEM в браузере.
+- Технический специалист не готовит и не загружает favicon для каждого клиента.
+- Favicon не является логотипом клиента и не показывается как логотип внутри страницы.
+- Клиентский `logo.*` никогда автоматически не заменяет системный favicon.
+
+## Обязательный принцип для ChatGPT/технического специалиста
+
+При создании нового сайта:
+1. прочитать этот `RULES.md`;
+2. скопировать `site-data.blank.js` в `site-data.js`;
+3. загрузить реальные медиа с каноническими именами;
+4. прописать пути в `site-data.js` по правилам выше;
+5. не менять утверждённый дизайн ради конкретных фотографий;
+6. запустить production-валидацию и regression checks из `docs/FACTORY_GUIDE.md`.
+
+## Финальный визуальный контракт галереи и портфолио
+
+- Мобильная лента категорий услуг начинается на одной вертикали с левой границей первой карточки услуги; у текущего шаблона это 10 px от края экрана (включая расширение карточек на 15 px относительно контейнера). Не добавлять затемнение/маску справа: владелец отказался от этого предложения.
+- При открытии фотографии **из мобильного портфолио** текст «Фото SALON NAME» не показывается; кнопка «Открыть галерею» расположена по центру **ниже изображения**, на одной горизонтальной линии со счётчиком фотографий справа. При открытии фотографии непосредственно из галереи дополнительная кнопка скрыта.
+- На ПК счётчик находится сразу под фотографией у **правого края самой карточки**, не внутри изображения. Кнопка «Открыть галерею» расположена по центру ниже фотографии, увеличена в ширину примерно на 2 см (218 px). Шрифт категорий галереи — 14 px.
+- Изменения оформления не должны затрагивать категории/время/цены **самих карточек услуг**, тёмные фоны услуг и контактов или данные реальных клиентов. Эталон карточки галереи — `ichAEY/Beauty-Room-by-Esmeralda`.

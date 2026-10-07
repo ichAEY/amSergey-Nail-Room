@@ -573,3 +573,9 @@ html{background:linear-gradient(to bottom,#fafaf9 0%,#fafaf9 58%,#181818 100%)!i
   #salon-mobile #tn13Gallery{transition:none!important}
   #salon-mobile #tn13Services .tn31-service-more-wrap{transition:none!important}
 }
+
+/* Nail Room: two mobile gallery categories fill the capsule. */
+@media (max-width:1023px){
+  html[data-br-device="mobile"] #salon-mobile #tn13Gallery .tn22-gallery-tabs.is-two{width:100%!important;overflow-x:hidden!important}
+  html[data-br-device="mobile"] #salon-mobile #tn13Gallery .tn22-gallery-tabs.is-two > .tn22-gallery-tab{flex:1 1 0!important;min-width:0!important;padding-inline:8px!important;text-align:center!important}
+}

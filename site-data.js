@@ -161,7 +161,33 @@ const data={
       }
     ],
     "gallery": {
-      "Ногти": [
+      "Салон": [
+        {
+          "src": "gallery-23.webp",
+          "alt": {
+            "ru": "Интерьер Nail Room",
+            "en": "Nail Room salon interior",
+            "hy": "Nail Room սրահի ինտերիեր"
+          }
+        },
+        {
+          "src": "gallery-24.webp",
+          "alt": {
+            "ru": "Интерьер Nail Room",
+            "en": "Nail Room salon interior",
+            "hy": "Nail Room սրահի ինտերիեր"
+          }
+        },
+        {
+          "src": "gallery-25.webp",
+          "alt": {
+            "ru": "Интерьер Nail Room",
+            "en": "Nail Room salon interior",
+            "hy": "Nail Room սրահի ինտերիեր"
+          }
+        }
+      ],
+      "Маникюр": [
         {
           "src": "gallery-01.webp",
           "alt": {
@@ -338,37 +364,11 @@ const data={
             "hy": "Nail Room-ի եղունգների աշխատանքներ"
           }
         }
-      ],
-      "Салон": [
-        {
-          "src": "gallery-23.webp",
-          "alt": {
-            "ru": "Интерьер Nail Room",
-            "en": "Nail Room salon interior",
-            "hy": "Nail Room սրահի ինտերիեր"
-          }
-        },
-        {
-          "src": "gallery-24.webp",
-          "alt": {
-            "ru": "Интерьер Nail Room",
-            "en": "Nail Room salon interior",
-            "hy": "Nail Room սրահի ինտերիեր"
-          }
-        },
-        {
-          "src": "gallery-25.webp",
-          "alt": {
-            "ru": "Интерьер Nail Room",
-            "en": "Nail Room salon interior",
-            "hy": "Nail Room սրահի ինտերիեր"
-          }
-        }
       ]
     },
     "desktopGalleryLimits": {
-      "Ногти": 22,
-      "Салон": 3
+      "Салон": 3,
+      "Маникюр": 22
     }
   },
   "categoryLabels": {

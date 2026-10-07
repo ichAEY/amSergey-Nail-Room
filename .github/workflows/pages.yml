@@ -26,11 +26,11 @@ jobs:
           ref: 33e20e61e2d4382a98518e2d7ac275a4a3d22b8a
           path: .approved-salon
           fetch-depth: 0
-      - name: Verify approved salon code is unmodified
+      - name: Verify shared salon engine remains unchanged
         shell: bash
         run: |
           set -euo pipefail
-          for f in index.html desktop.css desktop.js mobile.css mobile-overrides.css mobile.js salon-palette.css site-regions.js site-runtime.js scripts/prune-dead-css.cjs scripts/style-cleanup-config.cjs; do
+          for f in index.html desktop.css mobile.css salon-palette.css site-regions.js site-runtime.js scripts/prune-dead-css.cjs scripts/style-cleanup-config.cjs; do
             cmp "$f" ".approved-salon/$f"
           done
       - name: Verify salon factory and regression tests

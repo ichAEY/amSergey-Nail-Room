@@ -448,7 +448,7 @@
   const galleryImage=document.getElementById('stdGalleryImage');
   const galleryCount=document.getElementById('stdGalleryCount');
   const galleryViewAll=document.getElementById('stdViewGallery');
-  let galleryCategory='Ногти';
+  let galleryCategory='Маникюр';
   let galleryItems=PORTFOLIO.slice();
   let galleryIndex=0;
   let galleryScale=1,galleryX=0,galleryY=0;
@@ -546,8 +546,8 @@
     const item=(DESKTOP_GALLERY_GROUPS[galleryCategory]||[])[Number(tile.dataset.galleryItem)||0];
     if(item)warmGalleryImage(item.src);
   },{passive:true});
-  function openDesktopGalleryBrowser(cat='Салон'){
-    galleryCategory=Object.prototype.hasOwnProperty.call(DESKTOP_GALLERY_GROUPS,cat)?cat:'Салон';
+  function openDesktopGalleryBrowser(cat='Маникюр'){
+    galleryCategory=Object.prototype.hasOwnProperty.call(DESKTOP_GALLERY_GROUPS,cat)?cat:'Маникюр';
     renderDesktopGalleryBrowser();
     galleryBrowser.classList.add('open');
     galleryBrowser.scrollTop=0;
@@ -561,14 +561,14 @@
   document.querySelectorAll('.std-work').forEach(btn=>{
     btn.addEventListener('click',()=>openDesktopViewer(PORTFOLIO,Number(btn.dataset.portfolioIndex)||0,'portfolio'));
   });
-  document.getElementById('stdOpenGallery').addEventListener('click',()=>openDesktopGalleryBrowser('Ногти'));
-  document.getElementById('stdStickyGalleryOpen')?.addEventListener('click',()=>openDesktopGalleryBrowser('Ногти'));
-  document.getElementById('stdViewWorks')?.addEventListener('click',e=>{e.preventDefault();openDesktopGalleryBrowser('Ногти')});
+  document.getElementById('stdOpenGallery').addEventListener('click',()=>openDesktopGalleryBrowser('Маникюр'));
+  document.getElementById('stdStickyGalleryOpen')?.addEventListener('click',()=>openDesktopGalleryBrowser('Маникюр'));
+  document.getElementById('stdViewWorks')?.addEventListener('click',e=>{e.preventDefault();openDesktopGalleryBrowser('Маникюр')});
   document.getElementById('stdGalleryBrowserBack').addEventListener('click',closeDesktopGalleryBrowser);
   document.getElementById('stdGalleryClose').addEventListener('click',closeDesktopViewer);
   document.getElementById('stdGalleryPrev').addEventListener('click',()=>moveDesktopGallery(-1));
   document.getElementById('stdGalleryNext').addEventListener('click',()=>moveDesktopGallery(1));
-  galleryViewAll.addEventListener('click',()=>{closeDesktopViewer();openDesktopGalleryBrowser('Ногти')});
+  galleryViewAll.addEventListener('click',()=>{closeDesktopViewer();openDesktopGalleryBrowser('Маникюр')});
   gallery.addEventListener('click',e=>{if(e.target===gallery)closeDesktopViewer()});
 
   galleryStage.addEventListener('wheel',e=>{

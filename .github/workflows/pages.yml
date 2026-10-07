@@ -50,7 +50,8 @@ jobs:
             cp "$f" _site/
           done
           shopt -s nullglob
-          for f in gallery-*.webp team-*.webp logo.webp logo.png logo.svg; do cp "$f" _site/; done
+          for f in gallery-*.webp team-*.webp; do cp "$f" _site/; done
+          for f in logo.webp logo.png logo.svg; do if test -f "$f"; then cp "$f" _site/; fi; done
           touch _site/.nojekyll
           test ! -e _site/source-photos
           test ! -e _site/business.json
